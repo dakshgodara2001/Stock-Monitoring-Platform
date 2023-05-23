@@ -2,6 +2,12 @@
 
 The Stock Monitoring Platform is a real-time web application that allows users to monitor the latest stock prices from major companies.
 
+
+https://github.com/dakshgodara2001/Stock-Monitoring-Platform/assets/52131905/d9d9f84b-1504-487e-96ae-e906967cbe96
+
+
+
+
 ## Features
 
 - Real-time stock data: Get the latest stock prices from a wide selection of companies.
