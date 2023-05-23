@@ -23,6 +23,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ml-auto">
+                    
+
+                    {% if user.is_authenticated %}
+                    
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'stockpicker' %}">Stock Picker</a>
                     </li>
@@ -30,7 +34,6 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'stocktracker' %}">Stock Tracker</a>
                     </li>
 
-                    {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a>
                     </li>
@@ -48,7 +51,7 @@
             </div>
         </div>
     </nav>
-
+<!--
     {% if messages %}
     {% for message in messages %}
 
@@ -58,7 +61,7 @@
     </div>
 
     {% endfor %}
-    {% endif %}
+    {% endif %}-->
 
 
     {% block body %}

@@ -19,13 +19,7 @@ app.conf.update(timezone = 'Asia/Kolkata')
 
 app.config_from_object(settings, namespace='CELERY')
 
-app.conf.beat_schedule = {
-    #'every-10-seconds' : {
-    #   'task': 'mainapp.tasks.update_stock',
-    #    'schedule': 10,
-    #    'args': (['TSLA', 'LCID'],)
-    #},
-}
+app.conf.beat_schedule = {}
 
 app.autodiscover_tasks()
 

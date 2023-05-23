@@ -31,7 +31,6 @@ def checkAuthenticated(request):
     else:
         return True
 
-@sync_to_async
 def get_alpha_vantage_quote(symbol, api_key):
     base_url = "https://www.alphavantage.co/query"
     function = "GLOBAL_QUOTE"
@@ -54,8 +53,7 @@ def get_alpha_vantage_quote(symbol, api_key):
 async def stockTracker(request):
     is_loginned = await checkAuthenticated(request)
     if not is_loginned:
-        pass
-        #return HttpResponse("Login First")
+        return HttpResponse("Login First")
 
     stockpicker = request.GET.getlist('stockpicker')
     stockshare=str(stockpicker)[1:-1]
