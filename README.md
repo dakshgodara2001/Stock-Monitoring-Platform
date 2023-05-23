@@ -3,16 +3,14 @@
 The Stock Monitoring Platform is a real-time web application that allows users to monitor the latest stock prices from major companies.
 
 
+
 https://github.com/dakshgodara2001/Stock-Monitoring-Platform/assets/52131905/d9d9f84b-1504-487e-96ae-e906967cbe96
-
-
 
 
 ## Features
 
 - Real-time stock data: Get the latest stock prices from a wide selection of companies.
 - Customizable dashboard: Select your preferred companies to view their stock prices.
-- Stock ticker: View the latest stock prices in a scrolling ticker, just like in a stock exchange.
 
 ## Setup and Installation
 
@@ -20,7 +18,7 @@ To set up the Stock Monitoring Platform on your local machine:
 
 1. Clone the repository to your machine.
     ```
-    git clone https://github.com/yourusername/stock-monitoring-platform.git
+    git clone https://github.com/dakshgodara2001/stock-monitoring-platform.git
     ```
 
 2. Navigate to the project directory.
@@ -53,14 +51,7 @@ Once the application is running:
 2. Select your preferred stocks from the dropdown menu and submit.
 3. The selected stocks will be displayed in a table and a scrolling ticker.
 
-## Contributing
-
-We welcome contributions to the Stock Monitoring Platform! Please fork the repository and submit a pull request with your changes.
-
-## License
-
-This project is licensed under the MIT License.
 
 ## Contact
 
-If you have any questions or suggestions, please open an issue on GitHub.
+If you have any questions or suggestions, please contact.
