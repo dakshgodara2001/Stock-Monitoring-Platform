@@ -31,6 +31,7 @@ def checkAuthenticated(request):
     else:
         return True
 
+@sync_to_async
 def get_alpha_vantage_quote(symbol, api_key):
     base_url = "https://www.alphavantage.co/query"
     function = "GLOBAL_QUOTE"

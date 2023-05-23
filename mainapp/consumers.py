@@ -12,7 +12,6 @@ class StockConsumer(AsyncWebsocketConsumer):
     def addToCeleryBeat(self, stockpicker):
         task = PeriodicTask.objects.filter(name = "every-10-seconds")
         if len(task)>0:
-            print("hello")  # testing that task.first() will work or not
             task = task.first()
             args = json.loads(task.args)
             args = args[0]
@@ -55,8 +54,8 @@ class StockConsumer(AsyncWebsocketConsumer):
         # add user to stockdetail
         await self.addToStockDetail(stockpicker)
 
-
         await self.accept()
+
 
     @sync_to_async
     def helper_func(self):
