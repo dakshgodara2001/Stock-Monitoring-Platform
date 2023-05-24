@@ -24,28 +24,26 @@ def get_alpha_vantage_quote(symbol, api_key):
         "datatype": datatype
     }
 
-    response = requests.get(base_url, params=params)
-    data = response.json()
-
-    return data["Global Quote"]
-
+    try:
+        response = requests.get(base_url, params=params)
+        data = response.json()
+        return data["Global Quote"]
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return None
 
 @shared_task(bind = True)
 def update_stock(self, stockpicker):
     data = {}
     available_stocks = ["TSLA", "CHPT", "LCID", "GME", "AMD", "NVDA", "AMZN", "GOOG", "AAPL", "MSFT", "COIN", "WMT", "BOIL", "META", "AI", "BABA", "SQ", "NFLX", "WISH", "WBD", "DIS", "SNOW"]
-    for i in stockpicker:
-        if i in available_stocks:
-            pass
-        else:
-            stockpicker.remove(i)
+    stockpicker = [stock for stock in stockpicker if stock in available_stocks]
     
     n_threads = len(stockpicker)
     thread_list = []
     que = queue.Queue()
-    for i in range(n_threads):
-        thread = Thread(target = lambda q, arg1: q.put({stockpicker[i]: json.loads(json.dumps(get_alpha_vantage_quote(arg1, api_key), ignore_nan = True))}), args = (que, stockpicker[i]))
 
+    for i in range(n_threads):
+        thread = Thread(target = lambda q, arg1, i=i: q.put({stockpicker[i]: json.loads(json.dumps(get_alpha_vantage_quote(arg1, api_key), ignore_nan = True))}), args = (que, stockpicker[i]))
         thread_list.append(thread)
         thread_list[i].start()
 
@@ -55,17 +53,18 @@ def update_stock(self, stockpicker):
     while not que.empty():
         result = que.get()
         data.update(result)
-            
+
     # send data to group
     channel_layer = get_channel_layer()
     loop = asyncio.new_event_loop()
-
     asyncio.set_event_loop(loop)
 
-    loop.run_until_complete(channel_layer.group_send("stock_track", {
-        'type': 'send_stock_update',
-        'message': data,
-    }))
-
+    try:
+        loop.run_until_complete(channel_layer.group_send("stock_track", {
+            'type': 'send_stock_update',
+            'message': data,
+        }))
+    finally:
+        loop.close()
     
     return 'Done'

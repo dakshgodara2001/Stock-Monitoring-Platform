@@ -10,7 +10,7 @@ class StockConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def addToCeleryBeat(self, stockpicker):
-        task = PeriodicTask.objects.filter(name = "every-10-seconds")
+        task = PeriodicTask.objects.filter(name = "every-1-minute")
         if len(task)>0:
             task = task.first()
             args = json.loads(task.args)
@@ -21,8 +21,8 @@ class StockConsumer(AsyncWebsocketConsumer):
             task.args = json.dumps([args])
             task.save()
         else:
-            schedule, created = IntervalSchedule.objects.get_or_create(every=10, period = IntervalSchedule.SECONDS)
-            task = PeriodicTask.objects.create(interval = schedule, name='every-10-seconds', task="mainapp.tasks.update_stock", args = json.dumps([stockpicker]))
+            schedule, created = IntervalSchedule.objects.get_or_create(every=1, period = IntervalSchedule.MINUTES)
+            task = PeriodicTask.objects.create(interval = schedule, name='every-1-minute', task="mainapp.tasks.update_stock", args = json.dumps([stockpicker]))
 
     @sync_to_async    
     def addToStockDetail(self, stockpicker):
@@ -111,16 +111,13 @@ class StockConsumer(AsyncWebsocketConsumer):
     # Receive message from room group
     async def send_stock_update(self, event):
         message = event['message']
-        message = copy.copy(message)
+        message_copy = copy.deepcopy(message)
 
         user_stocks = await self.selectUserStocks()
 
-        keys = message.keys()
-        for key in list(keys):
-            if key in user_stocks:
-                pass
-            else:
-                del message[key]
+        for key in list(message_copy.keys()):
+            if key not in user_stocks:
+                del message_copy[key]
 
         # Send message to WebSocket
-        await self.send(text_data=json.dumps(message))
+        await self.send(text_data=json.dumps(message_copy))

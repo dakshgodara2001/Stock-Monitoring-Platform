@@ -12,24 +12,24 @@ import os
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stockmonitoring.settings')
-
 import django
 django.setup()
 
 from channels.auth import AuthMiddlewareStack
-from mainapp.routing import websocket_urlpatterns
+from mainapp import routing
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stockmonitoring.settings')
+
+
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
 
 application = ProtocolTypeRouter({
-    "http": django_asgi_app,
-    # Just HTTP for now. (We can add other protocols later.)
-    "websocket": AuthMiddlewareStack(
+    'http': django_asgi_app,
+    'websocket': AuthMiddlewareStack(
         URLRouter(
-            websocket_urlpatterns
+            routing.websocket_urlpatterns
         )
     ),
 })

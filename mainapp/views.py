@@ -13,14 +13,12 @@ load_dotenv()
 api_key = os.getenv("ALPHA_VANTAGE_API_KEY")
 
 
-# Create your views here.
 def home(request):
     return render(request, 'mainapp/basic.html')
 
 
 def stockPicker(request):
     stock_picker = ["TSLA", "CHPT", "LCID", "GME", "AMD", "NVDA", "AMZN", "GOOG", "AAPL", "MSFT", "COIN", "WMT", "BOIL", "META", "AI", "BABA", "SQ", "NFLX", "WISH", "WBD", "DIS", "SNOW"]
-    print(stock_picker)
     return render(request, 'mainapp/stockpicker.html', {'stockpicker':stock_picker})
 
 @sync_to_async
@@ -42,11 +40,13 @@ def get_alpha_vantage_quote(symbol, api_key):
         "datatype": datatype
     }
 
-    response = requests.get(base_url, params=params)
-    data = response.json()
-
-    return data["Global Quote"]
-
+    try:
+        response = requests.get(base_url, params=params)
+        data = response.json()
+        return data["Global Quote"]
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return None
 
 
 async def stockTracker(request):
@@ -55,24 +55,22 @@ async def stockTracker(request):
         return HttpResponse("Login First")
 
     stockpicker = request.GET.getlist('stockpicker')
-    stockshare=str(stockpicker)[1:-1]
+    stockshare = ", ".join(stockpicker)
     
-    print(stockpicker)
     data = {}
     available_stocks = ["TSLA", "CHPT", "LCID", "GME", "AMD", "NVDA", "AMZN", "GOOG", "AAPL", "MSFT", "COIN", "WMT", "BOIL", "META", "AI", "BABA", "SQ", "NFLX", "WISH", "WBD", "DIS", "SNOW"]
-    for i in stockpicker:
-        if i in available_stocks:
-            pass
-        else:
-            return HttpResponse("Error")
-    
+    stockpicker = [stock for stock in stockpicker if stock in available_stocks]
+
+    if len(stockpicker) == 0:
+        return HttpResponse("Error")
+
     n_threads = len(stockpicker)
     thread_list = []
     que = queue.Queue()
     start = time.time()
 
     for i in range(n_threads):
-        thread = Thread(target = lambda q, arg1: q.put({stockpicker[i]: get_alpha_vantage_quote(arg1, api_key)}), args = (que, stockpicker[i]))
+        thread = Thread(target = lambda q, arg1, i=i: q.put({stockpicker[i]: get_alpha_vantage_quote(arg1, api_key)}), args = (que, stockpicker[i]))
         thread_list.append(thread)
         thread_list[i].start()
 
@@ -85,8 +83,6 @@ async def stockTracker(request):
 
     end = time.time()
     time_taken =  end - start
-    print(time_taken)
+    print("Time taken: ", time_taken)
             
-    
-    print(data)
     return render(request, 'mainapp/stocktracker.html', {'data': data, 'room_name': 'track','selectedstock':stockshare})
