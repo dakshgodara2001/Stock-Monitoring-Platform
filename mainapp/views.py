@@ -20,7 +20,6 @@ def home(request):
 
 def stockPicker(request):
     stock_picker = ["TSLA", "CHPT", "LCID", "GME", "AMD", "NVDA", "AMZN", "GOOG", "AAPL", "MSFT", "COIN", "WMT", "BOIL", "META", "AI", "BABA", "SQ", "NFLX", "WISH", "WBD", "DIS", "SNOW"]
-
     print(stock_picker)
     return render(request, 'mainapp/stockpicker.html', {'stockpicker':stock_picker})
 
@@ -71,10 +70,6 @@ async def stockTracker(request):
     thread_list = []
     que = queue.Queue()
     start = time.time()
-
-    #for i in stockpicker:
-        #result = get_alpha_vantage_quote(i, api_key)
-        #data.update({i: result})
 
     for i in range(n_threads):
         thread = Thread(target = lambda q, arg1: q.put({stockpicker[i]: get_alpha_vantage_quote(arg1, api_key)}), args = (que, stockpicker[i]))

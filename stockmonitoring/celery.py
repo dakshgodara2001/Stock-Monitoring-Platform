@@ -3,13 +3,8 @@ import os
 
 from celery import Celery
 from django.conf import settings
-import requests
-from dotenv import load_dotenv
-from mainapp.views import get_alpha_vantage_quote
 
-load_dotenv()
 
-api_key = os.getenv("ALPHA_VANTAGE_API_KEY")
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stockmonitoring.settings')
 
