@@ -42,7 +42,7 @@ To set up the Stock Monitoring Platform on your local machine:
     python manage.py migrate
     ```
     
-5. Run the application.
+6. Run the application.
     ```
     python manage.py runserver
     ```
@@ -50,22 +50,23 @@ To set up the Stock Monitoring Platform on your local machine:
 The application will be available at `http://localhost:8000`.
 
 
-6. Open another terminal or command prompt.
+7. Open another terminal or command prompt.
 
 
-7. Start the Celery worker.
+8. Start the Celery worker.
     ```
     celery -A stockmonitoring worker -l info
 
     ```
 
-8. Open another terminal or command prompt.
+9. Open another terminal or command prompt.
 
 
-9. Start the Celery beat:
+10. Start the Celery beat:
     ```
     celery -A stockmonitoring beat -l info
     ```
+    
 The Celery worker and beat processes will now be running in the background, performing tasks and updating stock data at the scheduled intervals.
 
 
@@ -84,6 +85,7 @@ The Stock Monitoring Platform follows a modern and user-friendly design. It incl
 - **Interactive UI**: Users can view detailed information about each stock, including price, change, and volume.
 
 
+
 ## Back-End Code Documentation
 
 The back-end code of this project is written in Python using the Django framework. Here's a brief overview of the main components:
@@ -97,6 +99,12 @@ The back-end code of this project is written in Python using the Django framewor
 - `consumers.py`: Defines the WebSocket consumer for real-time stock updates. It handles the WebSocket connections, subscribes to stock groups, and sends stock data to connected clients.
 
 - `routing.py`: Configures the WebSocket routing for connecting to the WebSocket consumer.
+
+- `asgi.py`: Configures ASGI settings for WebSocket communication.
+
+- `celery.py`: Configures Celery settings for task scheduling and execution.
+
+- `myfilters.py`: Contains custom template filters for extracting values from data dictionaries.
 
 
 
@@ -114,8 +122,10 @@ The back-end code of this project is written in Python using the Django framewor
 Once the application is running:
 
 1. Go to the main page.
-2. Select your preferred stocks from the dropdown menu and submit.
-3. The selected stocks will be displayed in a table and a scrolling ticker.
+2. Register if a new user otherwise Login.
+3. Now go to StockPicker page.
+4. Select your preferred stocks from the dropdown menu and submit.
+5. The selected stocks will be displayed in a table and a scrolling ticker.
 
 
 ## Contact
